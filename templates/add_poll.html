@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增投票</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+        .form-container {
+            width: 60%;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            box-sizing: border-box;
+        }
+        button, .add-option {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        button:hover, .add-option:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>新增投票問題</h1>
+        <form method="POST" action="/add_poll">
+            <label>標題：<input type="text" name="title" required></label>
+            <label>內容：<textarea name="content" required></textarea></label>
+            <label>是否多選：<input type="checkbox" name="is_multiple_choice"></label>
+            <div id="options-container">
+                <label>選項：</label>
+                <input type="text" name="options" required><br>
+            </div>
+            <button type="button" class="add-option" onclick="addOption()">新增選項</button><br>
+            <button type="submit">新增投票</button>
+        </form>
+    </div>
+
+    <script>
+        function addOption() {
+            // 創建新的選項輸入欄位
+            const newOption = document.createElement("input");
+            newOption.type = "text";
+            newOption.name = "options";
+            newOption.placeholder = "新增選項";
+            newOption.style.marginTop = "10px";
+            newOption.required = true;
+
+            // 將新的選項輸入欄位加入到選項容器中
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.appendChild(newOption);
+            optionsContainer.appendChild(document.createElement("br"));
+        }
+    </script>
+</body>
+</html>

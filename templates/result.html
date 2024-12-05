@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票結果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            overflow-x: hidden; /* 禁止水平滾動 */
+        }
+        .container {
+            width: 80%; /* 容器寬度 */
+            max-width: 600px; /* 最大寬度 */
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            overflow-y: auto; /* 允許上下滾動 */
+            max-height: 90vh; /* 限制容器高度，過多內容時允許滾動 */
+        }
+        h1, p {
+            word-wrap: break-word; /* 自動換行 */
+            color: #333;
+            margin: 0;
+            padding: 10px;
+        }
+        .results {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .results p {
+            font-size: 18px;
+            color: #333;
+            word-wrap: break-word; /* 自動換行 */
+        }
+        .back-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ poll.title }}</h1>
+        <p>{{ poll.content }}</p>
+
+        <div class="results">
+            <h3>投票結果：</h3>
+            {% for option in poll.options %}
+                <p>{{ option.option_text }}: {{ option.votes }} 票</p>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('index') }}" class="back-btn">返回所有投票問題</a>
+    </div>
+</body>
+</html>

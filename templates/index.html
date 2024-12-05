@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>所有投票問題</title>
+    <style>
+        /* 基本表格樣式 */
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: center; 
+            vertical-align: middle;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        /* 設定內容欄位固定寬度，並強制換行 */
+        th:nth-child(2), td:nth-child(2) {
+            width: 40%;
+            word-wrap: break-word; /* 強制單詞換行 */
+            word-break: break-word; /* 若單詞太長則在單詞內換行 */
+            white-space: normal; /* 允許自動換行 */
+        }
+
+        /* 右上角按鈕容器 */
+        .top-right-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .top-right-buttons a {
+            margin-left: 10px;
+            padding: 10px 16px;
+            text-decoration: none;
+            font-size: 1em;
+            border-radius: 4px;
+            color: white;
+        }
+        .add-poll-btn {
+            background-color: #28a745;
+        }
+        .add-poll-btn:hover {
+            background-color: #218838;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 右上角新增投票和登出按鈕 -->
+    <div class="top-right-buttons">
+        <a href="{{ url_for('add_poll') }}" class="add-poll-btn">新增投票問題</a>
+        <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
+    </div>
+
+    <h1>所有投票問題</h1>
+    <table>
+        <tr>
+            <th>投票項目</th>
+            <th>內容</th>
+            <th>目前投票結果</th>
+            <th>操作</th>
+            <th>刪除</th>
+            <th>編輯</th>
+        </tr>
+        {% for poll in polls %}
+        <tr>
+            <td>{{ poll.title }}</td>
+            <td>{{ poll.content }}</td>
+            <td>
+                {% for option in poll.options %}
+                    {{ option.option_text }}: {{ option.votes }} 票<br>
+                {% endfor %}
+            </td>
+            <td>
+                <a href="/vote/{{ poll.id }}">投票</a>
+            </td>
+            <td>
+                <!-- 僅創建者可見刪除按鈕 -->
+                {% if poll.creator_id == current_user.id %}
+                    <button onclick="deletePoll('{{ poll.id }}')">刪除</button>
+                {% endif %}
+            </td>
+            <td>
+                {% if poll.creator_id == current_user.id %}
+                    <a href="{{ url_for('api.edit_poll', poll_id=poll.id) }}">編輯投票</a>
+                {% endif %}
+
+            </td>    
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        async function deletePoll(pollId) {
+            const response = await fetch(`/api/polls/${pollId}`, { method: 'DELETE' });
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('刪除失敗，請重試');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投票</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* 禁止左右滾動並允許自動換行 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            overflow-x: hidden; /* 禁止水平滾動 */
+        }
+        .container {
+            width: 80%; /* 容器寬度 */
+            max-width: 600px; /* 最大寬度 */
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            overflow-y: auto; /* 允許上下滾動 */
+            max-height: 90vh; /* 限制容器高度，過多內容時允許滾動 */
+        }
+        h1, p {
+            word-wrap: break-word; /* 自動換行 */
+            color: #333;
+            margin: 0;
+            padding: 10px;
+        }
+        .option-list {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .option-list input {
+            margin-right: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ poll.title }}</h1>
+        <p>{{ poll.content }}</p>
+
+        <form method="POST">
+            <div class="option-list">
+                {% if poll.is_multiple_choice %}
+                    <h3>多選題</h3>
+                    {% for option in poll.options %}
+                        <label>
+                            <input type="checkbox" name="options" value="{{ option.id }}" 
+                                   {% if option.id in voted_option_ids %}checked{% endif %}>
+                            {{ option.option_text }}
+                        </label><br>
+                    {% endfor %}
+                {% else %}
+                    <h3>單選題</h3>
+                    {% for option in poll.options %}
+                        <label>
+                            <input type="radio" name="option" value="{{ option.id }}" 
+                                   {% if option.id in voted_option_ids %}checked{% endif %}>
+                            {{ option.option_text }}
+                        </label><br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <button type="submit">提交投票</button>
+        </form>     
+    </div>
+</body>
+</html>
