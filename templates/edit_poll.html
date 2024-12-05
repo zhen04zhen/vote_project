@@ -2,40 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>編輯投票</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+            padding: 10px 0;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+        .option-list {
+            text-align: left;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>編輯投票</h1>
-    <form method="POST">
-        <label for="title">標題：</label>
-        <input type="text" id="title" name="title" value="{{ poll.title }}" required>
-        <br>
-        <label for="content">內容：</label>
-        <textarea id="content" name="content" required>{{ poll.content }}</textarea>
-        <br>
-        <label for="is_multiple_choice">允許多選：</label>
-        <input type="checkbox" id="is_multiple_choice" name="is_multiple_choice" {% if poll.is_multiple_choice %}checked{% endif %}>
-        <br>
-        <div id="options">
-            <label>選項：</label>
-            {% for option in poll.options %}
-                <input type="text" name="options" value="{{ option.option_text }}" required>
-                <br>
-            {% endfor %}
-        </div>
-        <button type="button" onclick="addOption()">新增選項</button>
-        <br>
-        <button type="submit">保存更改</button>
-    </form>
+    <div class="container">
+        <h1>編輯投票</h1>
+        <form method="POST">
+            <label for="title">標題：</label>
+            <input type="text" id="title" name="title" value="{{ poll.title }}" required>
+            
+            <label for="content">內容：</label>
+            <textarea id="content" name="content" required>{{ poll.content }}</textarea>
+            
+            <label for="is_multiple_choice">允許多選：</label>
+            <input type="checkbox" id="is_multiple_choice" name="is_multiple_choice" {% if poll.is_multiple_choice %}checked{% endif %}>
+            
+            <div class="option-list">
+                <label>選項：</label>
+                {% for option in poll.options %}
+                    <input type="text" name="options[]" value="{{ option.option_text }}" required>
+                {% endfor %}
+            </div>
+            
+            <button type="button" onclick="addOption()">新增選項</button>
+            <button type="submit">保存更改</button>
+        </form>
+    </div>
     <script>
         function addOption() {
-            const div = document.getElementById('options');
+            const div = document.querySelector('.option-list');
             const input = document.createElement('input');
             input.type = 'text';
-            input.name = 'options';
+            input.name = 'options[]';
             input.required = true;
             div.appendChild(input);
-            div.appendChild(document.createElement('br'));
         }
     </script>
 </body>
